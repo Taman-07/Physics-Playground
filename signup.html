@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Physics Playground | Sign Up</title>
+
+    <!-- FONTS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #07070c;
+            --purple: #9b6cff;
+            --purple-light: #c7adff;
+            --cyan: #3df3ff;
+            --white: #f6f6fa;
+            --muted: #85899b;
+            --border: rgba(255, 255, 255, 0.11);
+        }
+
+        /* ==============================
+           RESET
+        ============================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            min-height: 100%;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: "Plus Jakarta Sans", sans-serif;
+            color: var(--white);
+            background:
+                radial-gradient(circle at 10% 20%, rgba(155, 108, 255, 0.15), transparent 30%),
+                radial-gradient(circle at 90% 80%, rgba(61, 243, 255, 0.08), transparent 30%),
+                var(--bg);
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        /* ==============================
+           GRID
+        ============================== */
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+            background-size: 55px 55px;
+            mask-image: radial-gradient(circle at center, black 10%, transparent 80%);
+        }
+
+        /* ==============================
+           AMBIENT GLOW
+        ============================== */
+        .ambient {
+            position: fixed;
+            width: 450px;
+            height: 450px;
+            border-radius: 50%;
+            filter: blur(140px);
+            pointer-events: none;
+            opacity: 0.13;
+        }
+
+        .ambient-purple {
+            top: -180px;
+            left: -150px;
+            background: var(--purple);
+        }
+
+        .ambient-cyan {
+            right: -180px;
+            bottom: -180px;
+            background: var(--cyan);
+        }
+
+        /* ==============================
+           PAGE
+        ============================== */
+        .signup-page {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 45px 30px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ==============================
+           MAIN CARD
+        ============================== */
+        .signup-card {
+            width: min(1180px, 94vw);
+            min-height: 680px;
+            display: grid;
+            grid-template-columns: 54% 46%;
+            align-items: stretch; /* FIX: both columns share the same height */
+            position: relative;
+            overflow: hidden;
+            background: #10101a;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            box-shadow:
+                0 45px 120px rgba(0, 0, 0, 0.85),
+                0 0 80px rgba(155, 108, 255, 0.12),
+                0 0 150px rgba(61, 243, 255, 0.04);
+            animation: cardEnter 0.7s ease forwards;
+        }
+
+        @keyframes cardEnter {
+            from {
+                opacity: 0;
+                transform: translateY(25px) scale(0.97);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* ==============================
+           LEFT IMAGE
+        ============================== */
+        .visual-section {
+            position: relative;
+            height: auto;        /* FIX: no fixed height, stretches with the form */
+            min-height: 680px;
+            overflow: hidden;
+            background: #05050b;
+        }
+
+        .visual-section img {
+            position: absolute;  /* FIX: image fills the whole column */
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: cover;
+            object-position: center center;
+            filter: brightness(0.78) saturate(1.25) contrast(1.08);
+            transition: transform 0.8s ease;
+        }
+
+        .signup-card:hover .visual-section img {
+            transform: scale(1.025);
+        }
+
+        /* ==============================
+           IMAGE OVERLAY
+        ============================== */
+        .visual-section::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(90deg, transparent 45%, rgba(7, 7, 12, 0.85) 100%),
+                linear-gradient(0deg, rgba(4, 4, 9, 0.95), transparent 50%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* ==============================
+           PURPLE IMAGE GLOW
+        ============================== */
+        .visual-section::before {
+            content: "";
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            left: -160px;
+            top: 100px;
+            border-radius: 50%;
+            background: rgba(155, 108, 255, 0.22);
+            filter: blur(90px);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* ==============================
+           IMAGE TEXT
+        ============================== */
+        .visual-content {
+            position: absolute;
+            left: 50px;
+            bottom: 48px;
+            z-index: 3;
+            max-width: 520px;
+        }
+
+        .visual-tag {
+            font-family: "JetBrains Mono", monospace;
+            font-size: 16px;
+            font-weight: 800;
+            letter-spacing: 3px;
+            color: var(--cyan);
+            text-shadow: 0 0 18px rgba(61, 243, 255, 0.7);
+        }
+
+        .visual-content h1 {
+            margin-top: 13px;
+            font-size: 66px;
+            line-height: 1;
+            letter-spacing: -3px;
+            text-shadow: 0 6px 30px rgba(0, 0, 0, 0.85);
+        }
+
+        .visual-content h1 span {
+            display: block;
+            color: var(--purple-light);
+            text-shadow:
+                0 0 25px rgba(155, 108, 255, 0.8),
+                0 5px 25px rgba(0, 0, 0, 0.8);
+        }
+
+        .visual-content p {
+            margin-top: 18px;
+            color: #e0e1e8;
+            font-size: 20px;
+            line-height: 1.7;
+            text-shadow: 0 2px 12px black;
+        }
+
+        /* ==============================
+           RIGHT FORM
+        ============================== */
+        .form-section {
+            position: relative;
+            min-height: 680px;
+            padding: 65px 60px 45px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: linear-gradient(145deg, rgba(21, 21, 33, 0.99), rgba(8, 8, 15, 1));
+        }
+
+        /* TOP GLOW */
+        .form-section::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 10%;
+            width: 80%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--purple), var(--cyan), var(--purple), transparent);
+            box-shadow:
+                0 0 15px var(--purple),
+                0 0 30px rgba(61, 243, 255, 0.3);
+        }
+
+        /* CLOSE */
+        .close-button {
+            position: absolute;
+            top: 25px;
+            right: 28px;
+            color: #777b8d;
+            text-decoration: none;
+            font-size: 32px;
+            transition: 0.25s ease;
+        }
+
+        .close-button:hover {
+            color: white;
+            text-shadow: 0 0 18px var(--purple);
+        }
+
+        /* BRAND */
+        .brand {
+            font-family: "JetBrains Mono", monospace;
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            color: white;
+            text-decoration: none;
+        }
+
+        .brand span {
+            color: var(--purple);
+            text-shadow: 0 0 18px rgba(155, 108, 255, 0.8);
+        }
+
+        /* FORM HEADER */
+        .form-label {
+            margin-top: 40px;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 15px;
+            font-weight: 800;
+            letter-spacing: 3px;
+            color: var(--cyan);
+            text-shadow: 0 0 15px rgba(61, 243, 255, 0.6);
+        }
+
+        .form-section h2 {
+            margin-top: 13px;
+            font-size: 52px;
+            line-height: 1.05;
+            letter-spacing: -2px;
+            white-space: nowrap;
+        }
+
+        .form-description {
+            margin-top: 14px;
+            color: var(--muted);
+            font-size: 18px;
+            line-height: 1.7;
+            max-width: 520px;
+        }
+
+        /* ==============================
+           FORM
+        ============================== */
+        #signIn {
+            margin-top: 32px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 9px;
+            font-family: "JetBrains Mono", monospace;
+            color: #d7d8e2;
+            font-size: 14px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+        }
+
+        .input-group input {
+            width: 100%;
+            height: 62px;
+            padding: 0 17px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 7px;
+            outline: none;
+            background: rgba(255, 255, 255, 0.045);
+            color: white;
+            font-family: "Plus Jakarta Sans", sans-serif;
+            font-size: 18px;
+            transition: 0.25s ease;
+        }
+
+        .input-group input::placeholder {
+            color: #646879;
+        }
+
+        .input-group input:focus {
+            border-color: rgba(155, 108, 255, 0.9);
+            background: rgba(155, 108, 255, 0.05);
+            box-shadow:
+                0 0 0 3px rgba(155, 108, 255, 0.08),
+                0 0 28px rgba(155, 108, 255, 0.2);
+        }
+
+        /* ==============================
+           BUTTON
+        ============================== */
+        .signup-button {
+            width: 100%;
+            height: 64px;
+            margin-top: 8px;
+            border: none;
+            border-radius: 7px;
+            background: white;
+            color: #08080d;
+            cursor: pointer;
+            font-family: "Plus Jakarta Sans", sans-serif;
+            font-size: 18px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            transition: 0.3s ease;
+            box-shadow: 0 0 18px rgba(255, 255, 255, 0.08);
+        }
+
+        .signup-button:hover {
+            transform: translateY(-3px);
+            background: #eee9ff;
+            box-shadow:
+                0 0 20px rgba(255, 255, 255, 0.4),
+                0 0 45px rgba(155, 108, 255, 0.55),
+                0 12px 35px rgba(155, 108, 255, 0.2);
+        }
+
+        .signup-button:active {
+            transform: translateY(0);
+        }
+
+        /* ==============================
+           MESSAGE
+        ============================== */
+        #signInMessage {
+            min-height: 20px;
+            margin-top: 12px;
+            text-align: center;
+            color: #ff8e9e;
+            font-size: 15px;
+        }
+
+        /* ==============================
+           FOOTER
+        ============================== */
+        .form-footer {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            text-align: center;
+        }
+
+        .form-footer p {
+            color: var(--muted);
+            font-size: 16px;
+        }
+
+        .form-footer a {
+            color: var(--purple-light);
+            text-decoration: none;
+            font-weight: 800;
+            transition: 0.2s ease;
+        }
+
+        .form-footer a:hover {
+            color: white;
+            text-shadow: 0 0 12px rgba(155, 108, 255, 0.8);
+        }
+
+        .home-link {
+            display: inline-block;
+            margin-top: 13px;
+            color: #626678 !important;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 13px !important;
+            font-weight: 600 !important;
+        }
+
+        .home-link:hover {
+            color: white !important;
+        }
+
+        /* ==============================
+           LARGE LAPTOP
+        ============================== */
+        @media (max-width: 1200px) {
+            .signup-card {
+                width: 95vw;
+                grid-template-columns: 53% 47%;
+            }
+
+            .form-section {
+                padding-left: 45px;
+                padding-right: 45px;
+            }
+
+            .visual-content {
+                left: 40px;
+            }
+
+            .visual-content h1 {
+                font-size: 58px;
+            }
+
+            .form-section h2 {
+                font-size: 44px;
+            }
+        }
+
+        /* ==============================
+           TABLET
+        ============================== */
+        @media (max-width: 850px) {
+            .signup-page {
+                padding: 30px 20px;
+            }
+
+            .signup-card {
+                width: 100%;
+                grid-template-columns: 1fr;
+                max-width: 650px;
+            }
+
+            .visual-section {
+                height: 380px;
+                min-height: 380px;
+            }
+
+            .form-section {
+                min-height: auto;
+                padding: 55px 45px 45px;
+            }
+
+            .visual-content {
+                left: 35px;
+                bottom: 32px;
+            }
+
+            .visual-content h1 {
+                font-size: 54px;
+            }
+
+            .form-section h2 {
+                font-size: 46px;
+                white-space: normal;
+            }
+        }
+
+        /* ==============================
+           MOBILE
+        ============================== */
+        @media (max-width: 500px) {
+            .signup-page {
+                padding: 20px 12px;
+            }
+
+            .signup-card {
+                width: 100%;
+            }
+
+            .visual-section {
+                height: 300px;
+                min-height: 300px;
+            }
+
+            .visual-content {
+                left: 25px;
+                bottom: 25px;
+            }
+
+            .visual-content h1 {
+                font-size: 42px;
+            }
+
+            .visual-content p {
+                font-size: 16px;
+            }
+
+            .form-section {
+                padding: 45px 25px 35px;
+            }
+
+            .form-section h2 {
+                font-size: 38px;
+            }
+
+            .form-description {
+                font-size: 16px;
+            }
+
+            .input-group input {
+                height: 58px;
+            }
+
+            .signup-button {
+                height: 60px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- BACKGROUND -->
+    <div class="ambient ambient-purple"></div>
+    <div class="ambient ambient-cyan"></div>
+
+    <!-- SIGNUP PAGE -->
+    <main class="signup-page">
+
+        <section class="signup-card">
+
+            <!-- LEFT VISUAL -->
+            <div class="visual-section">
+
+                <img src="assets/physics-lab.png" alt="Physics Laboratory">
+
+                <div class="visual-content">
+                    <div class="visual-tag">PHYSICS PLAYGROUND</div>
+
+                    <h1>
+                        Explore the
+                        <span>unknown.</span>
+                    </h1>
+
+                    <p>
+                        Simulate. Experiment.
+                        Understand the universe.
+                    </p>
+                </div>
+
+            </div>
+
+            <!-- RIGHT FORM -->
+            <div class="form-section">
+
+                <!-- CLOSE -->
+                <a href="index.html" class="close-button">×</a>
+
+                <!-- BRAND -->
+                <a href="index.html" class="brand">
+                    PHYSICS <span>PLAYGROUND</span>
+                </a>
+
+                <!-- HEADER -->
+                <div class="form-label">CREATE YOUR ACCESS</div>
+
+                <h2>Join the laboratory</h2>
+
+                <p class="form-description">
+                    Create your account and start exploring
+                    interactive physics experiments.
+                </p>
+
+                <!-- FORM -->
+                <form id="signIn">
+
+                    <!-- NAME -->
+                    <div class="input-group">
+                        <label for="name">YOUR NAME</label>
+                        <input
+                            type="text"
+                            id="name"
+                            placeholder="Enter your name"
+                            autocomplete="name"
+                            required>
+                    </div>
+
+                    <!-- EMAIL -->
+                    <div class="input-group">
+                        <label for="email">EMAIL ADDRESS</label>
+                        <input
+                            type="email"
+                            id="email"
+                            placeholder="Enter your email"
+                            autocomplete="email"
+                            required>
+                    </div>
+
+                    <!-- PASSWORD -->
+                    <div class="input-group">
+                        <label for="password">PASSWORD</label>
+                        <input
+                            type="password"
+                            id="password"
+                            placeholder="Create a password"
+                            autocomplete="new-password"
+                            required>
+                    </div>
+
+                    <!-- BUTTON -->
+                    <button type="submit" class="signup-button">
+                        CREATE MY LABORATORY →
+                    </button>
+
+                </form>
+
+                <!-- MESSAGE -->
+                <p id="signInMessage" aria-live="polite"></p>
+
+                <!-- FOOTER -->
+                <div class="form-footer">
+                    <p>
+                        Already have an account?
+                        <a href="login.html">Login</a>
+                    </p>
+
+                    <a href="index.html" class="home-link">
+                        ← BACK TO PHYSICS PLAYGROUND
+                    </a>
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- JAVASCRIPT -->
+    <script src="js/signIn.js"></script>
+
+</body>
+
+</html>
