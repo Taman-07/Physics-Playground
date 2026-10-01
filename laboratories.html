@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Laboratories</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<section id="labs" class="labs section">
+
+<!-- SECTION HEADER -->
+<div class="sec-head">
+<div class="sec-head-top" style="display:flex;align-items:center;justify-content:space-between;width:100%;">
+<span class="sec-num">PHYSICS LABORATORY · 01 — 05</span>
+<a href="index.html" style="width:150px;height:42px;padding:0;background:#ffffff;color:#000000;border:1px solid #fdfafa;border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;text-decoration:none;font-size: large;">Go to Homepage</a>
+</div>
+<h2>Explore the <span class="gradient-text">laboratories .</span></h2>
+<p>Enter interactive laboratories to experiment with physical laws, mathematical models, and real-time simulations.</p>
+</div>
+
+<!-- LAB GRID -->
+<div class="grid">
+
+<!-- LAB 01 — PLANETS -->
+<article class="lab spot">
+<div class="lab-header"><span class="cat">Lab 01 · Astrophysics</span><span class="eq-pill"><h2>F = G·m₁m₂/r²</h2></span></div>
+<h3>Planets &amp; Gravity</h3>
+<p>Simulate central-force universal gravitation, multi-body Keplerian ellipses, and escape trajectories.</p>
+<div class="topics"><span>Universal Gravitation</span><span>Kepler's Laws</span><span>Escape Velocity</span></div>
+<div class="action-wrapper">
+<button class="open" data-auth-title="Planets & Gravity Laboratory" style="width:150px;height:42px;padding:0;background:#ffffff;color:#000000;border:1px solid #ffffff;border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;font-size: medium;">Physics Context</button>
+<button class="launch-lab" data-lab="planets" style="width:150px;height:42px;padding:0;background:#ffffff;color:#000000;border:1px solid #ffffff;border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;font-size: medium;">Launch Lab</button>
+<div class="lab-tooltip">
+<span class="tt-title">Physics Context</span>
+<div class="tt-body">Computes central inverse-square gravitational forces governing orbital angular momentum conservation.</div>
+<div class="tt-specs"><span>Const G: <b>6.674×10⁻¹¹</b></span><span>Integrator: <b>Verlet</b></span><span>Energy: <b>E = -G·M·m/2a</b></span><span>Orbits: <b>Keplerian</b></span></div>
+</div>
+</div>
+<div class="gravity-visual">
+<div class="gravity-sun"></div>
+<div class="gravity-orbit o1"><div class="gravity-planet p1"></div></div>
+<div class="gravity-orbit o2"><div class="gravity-planet p2"></div></div>
+<div class="gravity-orbit o3"><div class="gravity-planet p3"></div></div>
+</div>
+</article>
+
+<!-- LAB 02 — MECHANICS -->
+<article class="lab spot">
+<div class="lab-header"><span class="cat">Lab 02 · Dynamics</span><span class="eq-pill"><h2>∑F = m·a</h2></span></div>
+<h3>Classical Mechanics</h3>
+<p>Analyze Newton's laws of acceleration, kinetic friction thresholds, and net mechanical work vectors.</p>
+<div class="topics"><span>Newton's Laws</span><span>Kinetic Friction</span><span>Work-Energy</span></div>
+<div class="action-wrapper">
+<button class="open" data-auth-title="Classical Mechanics Laboratory" style="width:150px;height:42px;padding:0;background:#ffffff;color:#000000;border:1px solid #ffffff;border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box; font-size: medium;">Physics Context</button>
+<button class="launch-lab" data-lab="mechanics" style="width:150px;height:42px;padding:0;background:#ffffff;color:#000000;border:1px solid #ffffff;border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;font-size: medium;">Launch Lab</button>
+<div class="lab-tooltip">
+<span class="tt-title">Physics Context</span>
+<div class="tt-body">Evaluates dynamic friction f_k = μ_k N counteracting applied force vectors with real-time velocity integration.</div>
+<div class="tt-specs"><span>Coefficient μ: <b>0.15 - 0.85</b></span><span>Net Force: <b>F_net = F - f_k</b></span><span>Kinetic KE: <b>½ m v²</b></span><span>Equation: <b>a = F/m</b></span></div>
+</div>
+</div>
+<div class="mechanics-visual">
+<div class="mechanics-floor"></div>
+<div class="mechanics-block"></div>
+<div class="force-line"></div>
+<div class="velocity-line"></div>
+</div>
+</article>
+
+<!-- LAB 03 — OPTICS -->
+<article class="lab spot">
+<div class="lab-header"><span class="cat">Lab 03 · Wave Optics</span><span class="eq-pill"><h2>θ₁ = θ₂</h2></span></div>
+<h3>Ray &amp; Wave Optics</h3>
+<p>Trace laser trajectories, verify boundary reflection invariants, and observe photon stream dispersion.</p>
+<div class="topics"><span>Law of Reflection</span><span>Snell's Law</span><span>Photon Flux</span></div>
+<div class="action-wrapper">
+<button class="open" data-auth-title="Ray Optics Laboratory" style="width:150px;height:42px;padding:0;background:#ffffff;color:#000000;border:1px solid #ffffff;border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;font-size: medium;">Physics Context</button>
+<button class="launch-lab" data-lab="optics" style="width:150px;height:42px;padding:0;background:#ffffff;color:#000000;border:1px solid #ffffff;border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;font-size: medium;">Launch Lab</button>
+<div class="lab-tooltip">
+<span class="tt-title">Physics Context</span>
+<div class="tt-body">Models specular boundary reflection where angle of incidence equals angle of reflection along the surface normal.</div>
+<div class="tt-specs"><span>Incident θ₁: <b>Continuous Sweep</b></span><span>Reflectance: <b>100% Specular</b></span><span>Phase Shift: <b>π Radians</b></span><span>Medium: <b>Dielectric Interface</b></span></div>
+</div>
+</div>
+<div class="optics-visual">
+<div class="normal-line"></div>
+<div class="optics-mirror"><div class="mirror-sheen"></div></div>
+<div class="light-source"></div>
+<div class="light-ray incoming"></div>
+<div class="light-ray reflected"></div>
+<div class="photon-pulse photon-incoming"></div>
+<div class="photon-pulse photon-reflected"></div>
+<div class="optics-impact"></div>
+<span class="theta t1">θ₁</span>
+<span class="theta t2">θ₂</span>
+</div>
+</article>
+
+<!-- LAB 04 — COLLISIONS -->
+<article class="lab spot">
+<div class="lab-header"><span class="cat">Lab 04 · Momentum</span><span class="eq-pill"><h2>p = m·v</h2></span></div>
+<h3>Elastic Collisions</h3>
+<p>Observe linear momentum preservation, kinetic energy redistribution, and coefficient of restitution.</p>
+<div class="topics"><span>Momentum Conservation</span><span>Elasticity e</span><span>Impulse J</span></div>
+<div class="action-wrapper">
+<button class="open" data-auth-title="Elastic Collisions Laboratory" style="width:150px;height:42px;padding:0;background:#ffffff;color:#000000;border:1px solid #ffffff;border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;font-size: medium;">Physics Context</button>
+<button class="launch-lab" data-lab="collisions" style="width:150px;height:42px;padding:0;background:#ffffff;color:#000000;border:1px solid #ffffff;border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;font-size: medium;">Launch Lab</button>
+<div class="lab-tooltip">
+<span class="tt-title">Physics Context</span>
+<div class="tt-body">Conservation of total momentum with variable coefficient of restitution e = 1.0 (perfectly elastic).</div>
+<div class="tt-specs"><span>Restitution e: <b>1.0 (Elastic)</b></span><span>Total Δp: <b>0.00 kg·m/s</b></span><span>Impulse J: <b>∫ F dt</b></span><span>Exchange: <b>Kinetic Recoil</b></span></div>
+</div>
+</div>
+<div class="collision-visual">
+<div class="collision-ball a">m₁</div>
+<div class="collision-ball b">m₂</div>
+<div class="collision-arrow a">→</div>
+<div class="collision-arrow b">←</div>
+<div class="momentum-formula">p = mv</div>
+</div>
+</article>
+
+<!-- LAB 05 — MAGNETISM -->
+<article class="lab spot lab-center">
+<div class="lab-header"><span class="cat">Lab 05 · Electrodynamics</span><span class="eq-pill"><h2>∇ · B = 0</h2></span></div>
+<h3>Magnetic Dipoles &amp; Flux</h3>
+<p>Visualize continuous solenoidal field lines flowing from North to South pole and Lorentz force interactions.</p>
+<div class="topics"><span>Dipole Loops</span><span>Gauss's Law</span><span>Lorentz Force</span></div>
+<div class="action-wrapper">
+<button class="open" data-auth-title="Magnetic Dipoles Laboratory" style="width:150px;height:42px;padding:0;background:#ffffff;color:#000000;border:1px solid #ffffff;border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;font-size: medium;">Physics Context</button>
+<button class="launch-lab" data-lab="magnetism" style="width:150px;height:42px;padding:0;background:#ffffff;color:#000000;border:1px solid #ffffff;border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;font-size: medium;">Launch Lab</button>
+<div class="lab-tooltip">
+<span class="tt-title">Physics Context</span>
+<div class="tt-body">Computes solenoidal magnetic vector potentials confirming zero magnetic monopole divergence.</div>
+<div class="tt-specs"><span>Gauss Law: <b>∇ · B = 0</b></span><span>Flux lines: <b>Continuous Loops</b></span><span>Force: <b>F = q(E + v × B)</b></span><span>Poles: <b>Dipole Singularity</b></span></div>
+</div>
+</div>
+<div class="magnet-visual">
+<div class="magnet-assembly">
+<div class="field-lines-top"><div class="field-line f1"></div><div class="field-line f2"></div><div class="field-line f3"></div></div>
+<div class="magnet"><span class="north">N</span><span class="south">S</span></div>
+<div class="field-lines-bottom"><div class="field-line fb1"></div><div class="field-line fb2"></div><div class="field-line fb3"></div></div>
+</div>
+</div>
+</article>
+
+</div>
+</section>
+
+<script src="js/lab.js"></script>
+</body>
+</html>

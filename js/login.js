@@ -6,9 +6,11 @@ loginForm.addEventListener("submit", async(e)=>{
     const email=document.getElementById("email").value.trim();
     const password=document.getElementById("password").value;
 
+    loginMsg.style.color = "#ff8e9e";
+
     const existingUser=localStorage.getItem("user");
     if(!existingUser){
-        loginMessage.textContent="No account found. Please sign up.";
+        loginMsg.textContent="No account found. Please sign up.";
         return;
     }
 
@@ -17,13 +19,14 @@ loginForm.addEventListener("submit", async(e)=>{
 
     if(email===user.email && hashedPwd===user.password){
         localStorage.setItem("isLoggedIn", "true");
-        loginMessage.textContent="Login successful!";
+        loginMsg.style.color = "#7dffb0";
+        loginMsg.textContent="Login successful!";
         setTimeout(() => {
-            window.location.href = "index.html";
+            window.location.href = "laboratories.html";
         }, 500);
     }
     else{
-        loginMessage.textContent="Incorrect email or password.";
+        loginMsg.textContent="Incorrect email or password.";
     }
 });
 

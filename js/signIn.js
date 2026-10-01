@@ -52,7 +52,7 @@ signInForm.addEventListener("submit", async (e) => {
         signInMessage.textContent = "User created successfully!";
 
         setTimeout(function () {
-            window.location.href = "login.html";
+            window.location.href = "laboratories.html";
         }, 1000);
 
     } 
