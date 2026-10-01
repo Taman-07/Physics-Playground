@@ -18,7 +18,7 @@ loginForm.addEventListener("submit", async(e)=>{
     const hashedPwd=await hashPassword(password);
 
     if(email===user.email && hashedPwd===user.password){
-        localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem("isLoggedIn", user.email);
         loginMsg.style.color = "#7dffb0";
         loginMsg.textContent="Login successful!";
         setTimeout(() => {

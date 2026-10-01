@@ -47,7 +47,7 @@ signInForm.addEventListener("submit", async (e) => {
             password: hashedPwd
         };
         localStorage.setItem("user", JSON.stringify(user));
-
+        localStorage.setItem("isLoggedIn", user.email);
         signInMessage.style.color = "#7dffb0";
         signInMessage.textContent = "User created successfully!";
 
