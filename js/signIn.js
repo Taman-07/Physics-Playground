@@ -31,13 +31,11 @@ signInForm.addEventListener("submit", async (e) => {
         return;
     }
 
-    const existingUser = localStorage.getItem("user");
-    if (existingUser) {
-        const savedUser = JSON.parse(existingUser);
-        if (savedUser.email === email) {
-            signInMessage.textContent = "An account with this email already exists. Please log in.";
-            return;
-        }
+    const existingUser=JSON.parse(localStorage.getItem("users")) || [];
+    const emailExists=existingUser.some(user => user.email === email);
+    if (emailExists) {
+        signInMessage.textContent = "An account with this email already exists. Please log in.";
+        return;
     }
     try {
         const hashedPwd = await hashPassword(password);
@@ -46,13 +44,15 @@ signInForm.addEventListener("submit", async (e) => {
             email: email,
             password: hashedPwd
         };
-        localStorage.setItem("user", JSON.stringify(user));
+        existingUser.push(user);
+        localStorage.setItem("users", JSON.stringify(existingUser));
         localStorage.setItem("isLoggedIn", user.email);
+        localStorage.setItem("loginTime", Date.now());
         signInMessage.style.color = "#7dffb0";
         signInMessage.textContent = "User created successfully!";
 
         setTimeout(function () {
-            window.location.href = "laboratories.html";
+            window.location.href = "index.html";
         }, 1000);
 
     } 

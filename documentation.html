@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Documentation | Physics Playground</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  /* ---------- navbar: brand left, button right ---------- */
+  .header-inner { grid-template-columns: 1fr auto; }
+  .doc-mobile-nav { display: none; }
+
+  /* ---------- hero ---------- */
+  .doc-hero { width: min(var(--max), calc(100% - 48px)); margin: auto; padding: 70px 0 30px; text-align: center; }
+  .doc-hero h1 { font-size: clamp(40px, 5.4vw, 66px); line-height: 1.05; letter-spacing: -2.4px; font-weight: 900; }
+  .doc-hero .lead { margin: 18px auto 0; max-width: 620px; }
+  .doc-chips { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; margin-top: 42px; }
+  .doc-chip { position: relative; padding: 18px 14px; border-radius: 16px; text-align: left; background: rgba(255,255,255,.03); border: 1px solid var(--border); transition: transform .25s, border-color .25s, box-shadow .25s; overflow: hidden; }
+  .doc-chip::before { content: ""; position: absolute; left: 0; top: 0; right: 0; height: 2px; background: var(--accent); opacity: .8; }
+  .doc-chip:hover { transform: translateY(-4px); border-color: var(--accent); box-shadow: 0 14px 30px -12px var(--accent); }
+  .doc-chip small { display: block; font: 800 11px 'JetBrains Mono', monospace; letter-spacing: 1px; color: var(--accent); }
+  .doc-chip b { display: block; margin-top: 6px; font-size: 15px; }
+  .doc-chip span { display: block; margin-top: 4px; font: 600 12px 'JetBrains Mono', monospace; color: var(--muted); }
+
+  /* ---------- lab cards ---------- */
+  .doc-wrap { width: min(var(--max), calc(100% - 48px)); margin: 40px auto 80px; display: flex; flex-direction: column; gap: 34px; }
+  .doc-lab { position: relative; padding: 38px; border-radius: 24px; overflow: hidden; scroll-margin-top: 96px;
+    background: linear-gradient(180deg, rgba(14,14,25,.94), rgba(8,8,16,.98)); border: 1px solid var(--border);
+    box-shadow: 0 16px 40px -14px rgba(0,0,0,.6); transition: border-color .3s, box-shadow .3s; }
+  .doc-lab::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: linear-gradient(180deg, var(--accent), transparent); }
+  .doc-lab::after { content: ""; position: absolute; right: -90px; top: -90px; width: 280px; height: 280px; border-radius: 50%; background: var(--accent); filter: blur(110px); opacity: .12; pointer-events: none; }
+  .doc-lab:hover { border-color: var(--accent); box-shadow: 0 22px 54px -16px var(--accent); }
+  .doc-num { position: absolute; right: 30px; top: 14px; font: 900 96px 'JetBrains Mono', monospace; color: var(--accent); opacity: .09; line-height: 1; pointer-events: none; }
+  .doc-lab .cat { color: var(--accent); }
+  .doc-lab h2 { margin-top: 8px; font-size: clamp(28px, 3.6vw, 44px); font-weight: 900; letter-spacing: -1.4px; line-height: 1.1; }
+  .doc-lab .intro { max-width: 680px; margin-top: 12px; color: #b2b6c6; font-size: 16px; line-height: 1.7; }
+  .doc-eqs { margin-top: 18px; display: flex; flex-wrap: wrap; gap: 8px; }
+  .doc-eq { padding: 7px 13px; border-radius: 9px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1); color: #fff; font: 700 13px 'JetBrains Mono', monospace; }
+
+  .doc-cols { position: relative; z-index: 1; display: grid; grid-template-columns: 1.15fr .85fr; gap: 28px; margin-top: 28px; }
+  .doc-panel { padding: 22px; border-radius: 16px; background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.06); }
+  .doc-panel h4 { margin-bottom: 14px; font: 800 12px 'JetBrains Mono', monospace; letter-spacing: 1.2px; text-transform: uppercase; color: var(--accent); }
+
+  .doc-steps { list-style: none; counter-reset: step; display: flex; flex-direction: column; gap: 14px; }
+  .doc-steps li { counter-increment: step; position: relative; padding-left: 42px; color: #b8bccd; font-size: 14.5px; line-height: 1.65; }
+  .doc-steps li::before { content: counter(step); position: absolute; left: 0; top: 0; width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center;
+    font: 800 12px 'JetBrains Mono', monospace; color: #08080c; background: var(--accent); box-shadow: 0 0 14px var(--accent); }
+
+  .doc-specs { display: flex; flex-direction: column; }
+  .doc-specs div { display: flex; justify-content: space-between; gap: 14px; padding: 9px 0; border-bottom: 1px solid rgba(255,255,255,.07); font-size: 13.5px; }
+  .doc-specs div:last-child { border-bottom: 0; }
+  .doc-specs span { color: var(--muted); }
+  .doc-specs b { color: #fff; text-align: right; font-weight: 700; }
+
+  .doc-try { margin-top: 18px; padding: 16px 18px; border-radius: 14px; background: linear-gradient(135deg, rgba(255,255,255,.06), rgba(255,255,255,.02)); border: 1px dashed var(--accent); }
+  .doc-try h5 { font: 800 12px 'JetBrains Mono', monospace; letter-spacing: 1px; text-transform: uppercase; color: #fff; margin-bottom: 8px; }
+  .doc-try ul { padding-left: 18px; color: #b8bccd; font-size: 13.5px; line-height: 1.65; }
+
+  .doc-btn { padding: 11px 20px; border-radius: 10px; background: #fff; color: #08080c; font: 800 13px 'JetBrains Mono', monospace; transition: transform .2s, background .2s; }
+  .doc-btn:hover { background: #ded2ff; transform: translateY(-2px); }
+
+  /* ---------- reveal ---------- */
+  .reveal { opacity: 0; transform: translateY(26px); transition: opacity .7s ease, transform .7s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+
+  @media (max-width: 900px) {
+    .doc-chips { grid-template-columns: repeat(2, 1fr); }
+    .doc-cols { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 720px) {
+    .doc-lab { padding: 26px 22px; }
+    .doc-num { font-size: 64px; }
+    .doc-mobile-nav { display: flex; gap: 8px; overflow-x: auto; padding: 12px 18px; border-bottom: 1px solid var(--border); background: #040407; position: sticky; top: 66px; z-index: 30; }
+    .doc-mobile-nav a { flex: none; padding: 6px 14px; border-radius: 99px; border: 1px solid var(--border); color: #b9aed6; font-size: 13px; font-weight: 700; }
+  }
+</style>
+</head>
+<body>
+<div class="ambient a"></div>
+<div class="ambient b"></div>
+
+<!-- Navbar (same style as index.html) -->
+<header class="header">
+  <div class="header-inner">
+    <a href="index.html" class="brand">Physics Playground</a>
+    <div class="header-actions">
+      <a class="btn solid" href="index.html">Go to Homepage</a>
+    </div>
+  </div>
+</header>
+<nav class="doc-mobile-nav">
+  <a href="#planets">Lab 1</a><a href="#mechanics">Lab 2</a><a href="#optics">Lab 3</a><a href="#collisions">Lab 4</a><a href="#magnetism">Lab 5</a>
+</nav>
+
+<!-- Hero -->
+<section class="doc-hero" id="top">
+  <span class="eyebrow">Documentation · Lab 01 — 05</span>
+  <h1>Explore the <span class="gradient-text">documentation.</span></h1>
+  <p class="lead">Everything about the five laboratories: what each one simulates, how it works, the equations behind it, and what you can try.</p>
+
+  <div class="doc-chips">
+    <a class="doc-chip" href="#planets" style="--accent:#8b63ff"><small>LAB 01</small><b>Planets &amp; Gravity</b><span>F = G·m₁m₂/r²</span></a>
+    <a class="doc-chip" href="#mechanics" style="--accent:#35b8ff"><small>LAB 02</small><b>Classical Mechanics</b><span>ΣF = m·a</span></a>
+    <a class="doc-chip" href="#optics" style="--accent:#3df3ff"><small>LAB 03</small><b>Ray &amp; Wave Optics</b><span>θ₁ = θ₂</span></a>
+    <a class="doc-chip" href="#collisions" style="--accent:#ff4b83"><small>LAB 04</small><b>Elastic Collisions</b><span>p = m·v</span></a>
+    <a class="doc-chip" href="#magnetism" style="--accent:#ffb84d"><small>LAB 05</small><b>Magnetic Dipoles</b><span>∇ · B = 0</span></a>
+  </div>
+</section>
+
+<main class="doc-wrap">
+
+  <!-- LAB 01 -->
+  <article class="doc-lab reveal" id="planets" style="--accent:#8b63ff">
+    <span class="doc-num">01</span>
+    <span class="cat">Lab 01 · Astrophysics</span>
+    <h2>Explore <span class="gradient-text">Planets &amp; Gravity.</span></h2>
+    <p class="intro">Simulates universal gravitation between a central star and orbiting planets, so you can watch Kepler's laws appear on their own.</p>
+    <div class="doc-eqs"><span class="doc-eq">F = G·m₁m₂/r²</span><span class="doc-eq">E = −G·M·m / 2a</span><span class="doc-eq">v_esc = √(2GM/r)</span></div>
+    <div class="doc-cols">
+      <div class="doc-panel">
+        <h4>How it works</h4>
+        <ol class="doc-steps">
+          <li>Each frame, the inverse-square force between the star and every planet is calculated.</li>
+          <li>The force becomes an acceleration (a = F/m), and the Verlet integrator updates each position and velocity.</li>
+          <li>Because Verlet conserves energy well, orbits stay stable instead of spiralling away.</li>
+          <li>Planets closer to the star move faster, which shows Kepler's second and third laws.</li>
+        </ol>
+      </div>
+      <div>
+        <div class="doc-panel">
+          <h4>What's included</h4>
+          <div class="doc-specs">
+            <div><span>Constant G</span><b>6.674×10⁻¹¹</b></div>
+            <div><span>Integrator</span><b>Verlet</b></div>
+            <div><span>Orbit type</span><b>Keplerian ellipses</b></div>
+            <div><span>Concepts</span><b>Gravitation, Kepler, escape velocity</b></div>
+          </div>
+        </div>
+        <div class="doc-try"><h5>Try this</h5><ul><li>Increase the star's mass and see how orbital speed changes.</li><li>Give a planet a speed above escape velocity and watch it leave.</li></ul></div>
+      </div>
+    </div>
+  </article>
+
+  <!-- LAB 02 -->
+  <article class="doc-lab reveal" id="mechanics" style="--accent:#35b8ff">
+    <span class="doc-num">02</span>
+    <span class="cat">Lab 02 · Dynamics</span>
+    <h2>Explore <span class="gradient-text">Classical Mechanics.</span></h2>
+    <p class="intro">A block on a surface is pushed by an applied force while kinetic friction pushes back. You see how net force becomes acceleration.</p>
+    <div class="doc-eqs"><span class="doc-eq">ΣF = m·a</span><span class="doc-eq">f_k = μ_k·N</span><span class="doc-eq">F_net = F − f_k</span><span class="doc-eq">KE = ½·m·v²</span></div>
+    <div class="doc-cols">
+      <div class="doc-panel">
+        <h4>How it works</h4>
+        <ol class="doc-steps">
+          <li>The normal force N equals the block's weight on a flat surface.</li>
+          <li>Kinetic friction f_k = μ_k·N is subtracted from the applied force F.</li>
+          <li>The remaining net force gives the acceleration a = F_net / m.</li>
+          <li>Velocity and position are integrated each frame, and kinetic energy is updated.</li>
+        </ol>
+      </div>
+      <div>
+        <div class="doc-panel">
+          <h4>What's included</h4>
+          <div class="doc-specs">
+            <div><span>Friction μ</span><b>0.15 – 0.85</b></div>
+            <div><span>Vectors shown</span><b>Force (F), velocity (v)</b></div>
+            <div><span>Concepts</span><b>Newton's laws, friction, work–energy</b></div>
+          </div>
+        </div>
+        <div class="doc-try"><h5>Try this</h5><ul><li>Raise μ until friction cancels the applied force and the block stops accelerating.</li><li>Double the mass and compare the acceleration.</li></ul></div>
+      </div>
+    </div>
+  </article>
+
+  <!-- LAB 03 -->
+  <article class="doc-lab reveal" id="optics" style="--accent:#3df3ff">
+    <span class="doc-num">03</span>
+    <span class="cat">Lab 03 · Wave Optics</span>
+    <h2>Explore <span class="gradient-text">Ray &amp; Wave Optics.</span></h2>
+    <p class="intro">A laser beam hits a mirror, and you watch the reflected ray follow the law of reflection as the angle changes.</p>
+    <div class="doc-eqs"><span class="doc-eq">θ₁ = θ₂</span><span class="doc-eq">n₁ sinθ₁ = n₂ sinθ₂</span></div>
+    <div class="doc-cols">
+      <div class="doc-panel">
+        <h4>How it works</h4>
+        <ol class="doc-steps">
+          <li>A dashed normal line is drawn perpendicular to the mirror surface.</li>
+          <li>The incident ray strikes the mirror at angle θ₁, measured from the normal.</li>
+          <li>The reflected ray leaves at an equal angle θ₂ on the other side of the normal.</li>
+          <li>Photon pulses travel along both rays to show the direction of light.</li>
+        </ol>
+      </div>
+      <div>
+        <div class="doc-panel">
+          <h4>What's included</h4>
+          <div class="doc-specs">
+            <div><span>Incident angle θ₁</span><b>Continuous sweep</b></div>
+            <div><span>Reflectance</span><b>100% specular</b></div>
+            <div><span>Phase shift</span><b>π radians</b></div>
+            <div><span>Concepts</span><b>Reflection, Snell, photon flux</b></div>
+          </div>
+        </div>
+        <div class="doc-try"><h5>Try this</h5><ul><li>Compare θ₁ and θ₂ at several angles; they should always match.</li><li>Think about how Snell's law changes the picture when light enters glass.</li></ul></div>
+      </div>
+    </div>
+  </article>
+
+  <!-- LAB 04 -->
+  <article class="doc-lab reveal" id="collisions" style="--accent:#ff4b83">
+    <span class="doc-num">04</span>
+    <span class="cat">Lab 04 · Momentum</span>
+    <h2>Explore <span class="gradient-text">Elastic Collisions.</span></h2>
+    <p class="intro">Two masses collide head-on. You can check that total momentum is conserved and see how kinetic energy is shared.</p>
+    <div class="doc-eqs"><span class="doc-eq">p = m·v</span><span class="doc-eq">p_total = Σ mᵢvᵢ</span><span class="doc-eq">J = ∫ F dt</span><span class="doc-eq">e = (v₂′ − v₁′) / (v₁ − v₂)</span></div>
+    <div class="doc-cols">
+      <div class="doc-panel">
+        <h4>How it works</h4>
+        <ol class="doc-steps">
+          <li>Each ball starts with a mass and a velocity, giving it momentum p = m·v.</li>
+          <li>On contact, the new velocities are calculated so total momentum stays the same.</li>
+          <li>The coefficient of restitution e decides how much kinetic energy survives. At e = 1.0 the collision is perfectly elastic.</li>
+          <li>The total change in momentum (Δp) stays at 0.00 kg·m/s.</li>
+        </ol>
+      </div>
+      <div>
+        <div class="doc-panel">
+          <h4>What's included</h4>
+          <div class="doc-specs">
+            <div><span>Restitution e</span><b>1.0 (elastic)</b></div>
+            <div><span>Total Δp</span><b>0.00 kg·m/s</b></div>
+            <div><span>Concepts</span><b>Momentum, elasticity, impulse</b></div>
+          </div>
+        </div>
+        <div class="doc-try"><h5>Try this</h5><ul><li>Make one ball much heavier and see which one bounces back.</li><li>Compare equal masses: they swap velocities in an elastic collision.</li></ul></div>
+      </div>
+    </div>
+  </article>
+
+  <!-- LAB 05 -->
+  <article class="doc-lab reveal" id="magnetism" style="--accent:#ffb84d">
+    <span class="doc-num">05</span>
+    <span class="cat">Lab 05 · Electrodynamics</span>
+    <h2>Explore <span class="gradient-text">Magnetic Dipoles &amp; Flux.</span></h2>
+    <p class="intro">A bar magnet shows closed field lines flowing from the North pole to the South pole, and how a moving charge feels a magnetic force.</p>
+    <div class="doc-eqs"><span class="doc-eq">∇ · B = 0</span><span class="doc-eq">F = q(E + v × B)</span></div>
+    <div class="doc-cols">
+      <div class="doc-panel">
+        <h4>How it works</h4>
+        <ol class="doc-steps">
+          <li>The magnet is modelled as a dipole with a North and a South pole.</li>
+          <li>Field lines leave North, curve around, and enter South. They never start or end in empty space.</li>
+          <li>That closed-loop shape is Gauss's law for magnetism: there are no magnetic monopoles, so ∇ · B = 0.</li>
+          <li>A moving charge feels the Lorentz force, which acts perpendicular to both its velocity and the field.</li>
+        </ol>
+      </div>
+      <div>
+        <div class="doc-panel">
+          <h4>What's included</h4>
+          <div class="doc-specs">
+            <div><span>Field lines</span><b>Continuous loops</b></div>
+            <div><span>Poles</span><b>Dipole singularity</b></div>
+            <div><span>Concepts</span><b>Dipoles, Gauss's law, Lorentz force</b></div>
+          </div>
+        </div>
+        <div class="doc-try"><h5>Try this</h5><ul><li>Trace one field line from N to S and confirm it closes back through the magnet.</li><li>Predict the direction of the force on a charge moving across the field.</li></ul></div>
+      </div>
+    </div>
+  </article>
+
+  <p style="text-align:center;"><a class="doc-btn" href="#top" style="display:inline-block;font-size: medium;">Back to top</a></p>
+</main>
+
+<script>
+  // always start at the top
+  if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+  window.addEventListener("load", () => {
+    if (location.hash) history.replaceState(null, "", location.pathname);
+    window.scrollTo(0, 0);
+  });
+
+  // fade-in on scroll
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } });
+  }, { threshold: 0.08 });
+  document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+</script>
+</body>
+</html>

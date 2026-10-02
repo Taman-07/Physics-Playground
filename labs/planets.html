@@ -1,1209 +1,459 @@
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<meta name="description"
-    content="Physics Playground - Explore planets, gravity and orbital physics through interactive simulation.">
-
-<title>Planets & Gravity | Physics Playground</title>
-
-<style>
-
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-
-    :root {
-        --background: #05070c;
-        --surface: #0c1018;
-        --surface-light: #111722;
-        --border: rgba(255, 255, 255, 0.09);
-
-        --text: #f5f7fb;
-        --muted: #8992a3;
-
-        --purple: #887cff;
-        --blue: #48a9ff;
-        --cyan: #50dcff;
-        --green: #62e6a4;
-    }
-
-    html {
-        scroll-behavior: smooth;
-    }
-
-    body {
-        min-height: 100vh;
-
-        color: var(--text);
-
-        font-family: Arial, Helvetica, sans-serif;
-
-        background:
-            radial-gradient(
-                circle at 70% 15%,
-                rgba(94, 78, 220, 0.16),
-                transparent 30%
-            ),
-            radial-gradient(
-                circle at 15% 70%,
-                rgba(35, 130, 200, 0.08),
-                transparent 30%
-            ),
-            var(--background);
-
-        overflow-x: hidden;
-    }
-
-    body::before {
-        content: "";
-
-        position: fixed;
-        inset: 0;
-
-        pointer-events: none;
-
-        background-image:
-            linear-gradient(
-                rgba(255, 255, 255, 0.018) 1px,
-                transparent 1px
-            ),
-            linear-gradient(
-                90deg,
-                rgba(255, 255, 255, 0.018) 1px,
-                transparent 1px
-            );
-
-        background-size: 55px 55px;
-
-        mask-image: linear-gradient(
-            to bottom,
-            black,
-            transparent
-        );
-
-        z-index: -1;
-    }
-
-    a {
-        color: inherit;
-        text-decoration: none;
-    }
-
-
-    /* =========================
-       NAVBAR
-    ========================= */
-
-    .navbar {
-        width: min(1250px, calc(100% - 40px));
-
-        height: 70px;
-
-        margin: 18px auto 0;
-
-        padding: 0 22px;
-
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-
-        border: 1px solid var(--border);
-        border-radius: 16px;
-
-        background: rgba(8, 11, 17, 0.78);
-
-        backdrop-filter: blur(20px);
-
-        position: relative;
-        z-index: 10;
-    }
-
-    .logo {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .logo-icon {
-        width: 37px;
-        height: 37px;
-
-        display: grid;
-        place-items: center;
-
-        border-radius: 10px;
-
-        background: rgba(136, 124, 255, 0.12);
-
-        border: 1px solid rgba(136, 124, 255, 0.3);
-
-        color: var(--purple);
-
-        font-size: 22px;
-    }
-
-    .logo-text {
-        display: flex;
-        flex-direction: column;
-        gap: 3px;
-    }
-
-    .logo-text strong {
-        font-size: 12px;
-        letter-spacing: 0.12em;
-    }
-
-    .logo-text span {
-        color: var(--muted);
-
-        font-size: 7px;
-
-        letter-spacing: 0.2em;
-    }
-
-    .nav-links {
-        display: flex;
-        gap: 30px;
-    }
-
-    .nav-links a {
-        color: var(--muted);
-
-        font-size: 12px;
-
-        transition: 0.3s;
-    }
-
-    .nav-links a:hover,
-    .nav-links a.active {
-        color: white;
-    }
-
-    .back-btn {
-        padding: 9px 16px;
-
-        border: 1px solid var(--border);
-        border-radius: 9px;
-
-        color: var(--muted);
-
-        font-size: 11px;
-
-        transition: 0.3s;
-    }
-
-    .back-btn:hover {
-        color: white;
-
-        background: rgba(255, 255, 255, 0.05);
-
-        transform: translateY(-2px);
-    }
-
-
-    /* =========================
-       PAGE HEADER
-    ========================= */
-
-    .page {
-        width: min(1250px, calc(100% - 40px));
-
-        margin: auto;
-    }
-
-    .page-header {
-        padding: 65px 0 35px;
-
-        display: flex;
-        justify-content: space-between;
-        align-items: end;
-        gap: 30px;
-    }
-
-    .eyebrow {
-        color: var(--purple);
-
-        font-size: 9px;
-
-        letter-spacing: 0.2em;
-        font-weight: bold;
-    }
-
-    .page-header h1 {
-        margin-top: 12px;
-
-        font-size: clamp(38px, 5vw, 62px);
-
-        letter-spacing: -0.05em;
-    }
-
-    .gradient-text {
-        background:
-            linear-gradient(
-                100deg,
-                white,
-                #a9a0ff,
-                #52baff
-            );
-
-        -webkit-background-clip: text;
-        background-clip: text;
-
-        color: transparent;
-    }
-
-    .page-header p {
-        max-width: 390px;
-
-        color: var(--muted);
-
-        font-size: 13px;
-
-        line-height: 1.7;
-    }
-
-
-    /* =========================
-       SIMULATION LAYOUT
-    ========================= */
-
-    .simulation-layout {
-        display: grid;
-
-        grid-template-columns: minmax(0, 1fr) 330px;
-
-        gap: 18px;
-    }
-
-
-    /* =========================
-       CANVAS AREA
-    ========================= */
-
-    .simulation-container {
-        min-height: 570px;
-
-        position: relative;
-
-        overflow: hidden;
-
-        border: 1px solid var(--border);
-
-        border-radius: 20px;
-
-        background:
-            radial-gradient(
-                circle at center,
-                rgba(60, 80, 150, 0.08),
-                transparent 50%
-            ),
-            #070a10;
-
-        box-shadow:
-            inset 0 1px 0 rgba(255, 255, 255, 0.03),
-            0 25px 80px rgba(0, 0, 0, 0.3);
-    }
-
-    .simulation-header {
-        position: absolute;
-
-        top: 20px;
-        left: 22px;
-        right: 22px;
-
-        display: flex;
-        justify-content: space-between;
-
-        z-index: 2;
-    }
-
-    .simulation-title {
-        color: var(--muted);
-
-        font-size: 9px;
-
-        letter-spacing: 0.16em;
-    }
-
-    .simulation-status {
-        display: flex;
-        align-items: center;
-
-        gap: 7px;
-
-        color: var(--green);
-
-        font-size: 9px;
-
-        font-family: monospace;
-    }
-
-    .status-dot {
-        width: 6px;
-        height: 6px;
-
-        border-radius: 50%;
-
-        background: var(--green);
-
-        box-shadow: 0 0 12px var(--green);
-    }
-
-    .canvas-wrapper {
-        position: absolute;
-
-        inset: 55px 20px 20px;
-
-        display: grid;
-        place-items: center;
-    }
-
-    canvas {
-        width: 100%;
-        height: 100%;
-
-        display: block;
-
-        border-radius: 12px;
-    }
-
-    .simulation-hint {
-        position: absolute;
-
-        bottom: 18px;
-        left: 22px;
-
-        color: rgba(255, 255, 255, 0.28);
-
-        font-size: 9px;
-    }
-
-
-    /* =========================
-       CONTROL PANEL
-    ========================= */
-
-    .control-panel {
-        padding: 22px;
-
-        border: 1px solid var(--border);
-
-        border-radius: 20px;
-
-        background:
-            linear-gradient(
-                145deg,
-                rgba(255, 255, 255, 0.045),
-                rgba(255, 255, 255, 0.015)
-            );
-
-        backdrop-filter: blur(18px);
-    }
-
-    .panel-title {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-
-        margin-bottom: 24px;
-    }
-
-    .panel-title h2 {
-        font-size: 15px;
-    }
-
-    .panel-title span {
-        color: var(--muted);
-
-        font-size: 9px;
-
-        font-family: monospace;
-    }
-
-
-    /* =========================
-       FORM CONTROLS
-    ========================= */
-
-    .control-group {
-        margin-bottom: 24px;
-    }
-
-    .control-label {
-        display: flex;
-        justify-content: space-between;
-
-        margin-bottom: 9px;
-    }
-
-    .control-label label {
-        color: var(--muted-light);
-
-        font-size: 10px;
-    }
-
-    .control-value {
-        color: var(--purple);
-
-        font-family: monospace;
-
-        font-size: 10px;
-    }
-
-    select,
-    input[type="number"] {
-        width: 100%;
-
-        height: 40px;
-
-        padding: 0 12px;
-
-        border: 1px solid var(--border);
-
-        border-radius: 9px;
-
-        outline: none;
-
-        background: rgba(255, 255, 255, 0.035);
-
-        color: white;
-
-        font-size: 11px;
-    }
-
-    select:focus,
-    input[type="number"]:focus {
-        border-color: rgba(136, 124, 255, 0.5);
-    }
-
-    option {
-        background: #11141d;
-    }
-
-    input[type="range"] {
-        width: 100%;
-
-        height: 4px;
-
-        appearance: none;
-
-        border-radius: 10px;
-
-        background: #222735;
-
-        outline: none;
-    }
-
-    input[type="range"]::-webkit-slider-thumb {
-        appearance: none;
-
-        width: 15px;
-        height: 15px;
-
-        border-radius: 50%;
-
-        background: var(--purple);
-
-        border: 2px solid #d8d4ff;
-
-        box-shadow:
-            0 0 12px rgba(136, 124, 255, 0.5);
-
-        cursor: pointer;
-    }
-
-
-    /* =========================
-       BUTTONS
-    ========================= */
-
-    .control-buttons {
-        display: grid;
-
-        grid-template-columns: 1fr 1fr;
-
-        gap: 8px;
-
-        margin-top: 28px;
-    }
-
-    .control-btn {
-        height: 40px;
-
-        border: 1px solid var(--border);
-
-        border-radius: 9px;
-
-        background: rgba(255, 255, 255, 0.035);
-
-        color: var(--muted-light);
-
-        cursor: pointer;
-
-        font-size: 10px;
-
-        transition: 0.3s;
-    }
-
-    .control-btn:hover {
-        color: white;
-
-        background: rgba(255, 255, 255, 0.08);
-
-        transform: translateY(-2px);
-    }
-
-    .control-btn.primary {
-        background: rgba(136, 124, 255, 0.16);
-
-        border-color: rgba(136, 124, 255, 0.35);
-
-        color: #c8c2ff;
-    }
-
-
-    /* =========================
-       CALCULATIONS
-    ========================= */
-
-    .calculations {
-        margin-top: 18px;
-
-        padding: 20px;
-
-        border: 1px solid var(--border);
-
-        border-radius: 18px;
-
-        background: rgba(255, 255, 255, 0.02);
-    }
-
-    .calculations-header {
-        display: flex;
-        justify-content: space-between;
-
-        margin-bottom: 18px;
-    }
-
-    .calculations-header h2 {
-        font-size: 13px;
-    }
-
-    .calculations-header span {
-        color: var(--green);
-
-        font-size: 8px;
-
-        letter-spacing: 0.1em;
-    }
-
-    .calculation-grid {
-        display: grid;
-
-        grid-template-columns: repeat(4, 1fr);
-
-        gap: 10px;
-    }
-
-    .calculation {
-        padding: 15px;
-
-        border: 1px solid var(--border);
-
-        border-radius: 11px;
-
-        background: rgba(255, 255, 255, 0.02);
-    }
-
-    .calculation span {
-        display: block;
-
-        color: var(--muted);
-
-        font-size: 8px;
-
-        margin-bottom: 8px;
-    }
-
-    .calculation strong {
-        font-family: monospace;
-
-        font-size: 15px;
-    }
-
-    .unit {
-        color: var(--muted);
-
-        font-size: 8px;
-    }
-
-
-    /* =========================
-       FORMULA
-    ========================= */
-
-    .formula {
-        margin-top: 18px;
-
-        padding: 18px 20px;
-
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-
-        border: 1px solid rgba(136, 124, 255, 0.15);
-
-        border-radius: 14px;
-
-        background:
-            linear-gradient(
-                100deg,
-                rgba(136, 124, 255, 0.07),
-                rgba(72, 169, 255, 0.03)
-            );
-    }
-
-    .formula-info span {
-        display: block;
-
-        color: var(--muted);
-
-        font-size: 8px;
-
-        letter-spacing: 0.15em;
-    }
-
-    .formula-info strong {
-        display: block;
-
-        margin-top: 6px;
-
-        font-family: monospace;
-
-        font-size: 16px;
-
-        color: #d5d0ff;
-    }
-
-    .formula-description {
-        color: var(--muted);
-
-        font-size: 9px;
-
-        max-width: 250px;
-
-        line-height: 1.6;
-
-        text-align: right;
-    }
-
-
-    /* =========================
-       RESPONSIVE
-    ========================= */
-
-    @media (max-width: 900px) {
-
-        .simulation-layout {
-            grid-template-columns: 1fr;
+    <title>Earth & Gravity | Physics Playground</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        .simulation-container {
-            min-height: 500px;
+        body {
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            color: #fff;
+            background: #05070d;
         }
 
-        .control-panel {
-            display: grid;
-
-            grid-template-columns: 1fr 1fr;
-
-            gap: 10px;
+        a {
+            color: inherit;
+            text-decoration: none;
         }
 
-        .panel-title {
-            grid-column: 1 / -1;
+        .back {
+            position: absolute;
+            top: 25px;
+            right: 4%;
+            padding: 10px 18px;
+            border: 1px solid #ffffff;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 700;
+            color: #05070d;
+            background: #ffffff;
+            transition: 0.3s;
         }
 
-        .control-buttons {
-            grid-column: 1 / -1;
-        }
-
-        .calculations {
-            margin-bottom: 20px;
-        }
-    }
-
-
-    @media (max-width: 650px) {
-
-        .navbar {
-            width: calc(100% - 24px);
-        }
-
-        .nav-links {
-            display: none;
+        .back:hover {
+            background: #e5e5e5;
         }
 
         .page {
-            width: calc(100% - 24px);
+            width: 92%;
+            max-width: 1200px;
+            margin: auto;
         }
 
-        .page-header {
-            padding-top: 45px;
-
-            flex-direction: column;
-
-            align-items: flex-start;
+        .heading {
+            margin: 35px 0 30px;
         }
 
-        .simulation-container {
-            min-height: 430px;
+        .heading small {
+            color: #887cff;
+            letter-spacing: 3px;
         }
 
-        .control-panel {
+        .heading h1 {
+            margin: 12px 0;
+            font-size: clamp(38px, 6vw, 65px);
+        }
+
+        .heading p {
+            max-width: 550px;
+            color: #8d96a8;
+            line-height: 1.7;
+        }
+
+        .simulation {
+            display: grid;
+            grid-template-columns: 1fr 310px;
+            gap: 20px;
+        }
+
+        .canvas-box,
+        .controls,
+        .calculations {
+            border: 1px solid #202638;
+            border-radius: 18px;
+            background: #0a0e17;
+        }
+
+        .canvas-box {
+            min-height: 550px;
+            position: relative;
+            padding: 20px;
+        }
+
+        .canvas-title {
+            display: flex;
+            justify-content: space-between;
+            color: #8992a3;
+            font-size: 11px;
+            letter-spacing: 2px;
+        }
+
+        .status {
+            color: #62e6a4;
+        }
+
+        /* Simulation area */
+        .canvas-wrap {
+            margin-top: 15px;
+            border: 1px solid #202638;
+            border-radius: 10px;
+            overflow: hidden;
+            background: radial-gradient(ellipse at 50% 110%, #12244a 0%, #080c18 55%, #04060b 100%);
+        }
+
+        canvas {
+            width: 100%;
+            height: 470px;
             display: block;
         }
 
-        .calculation-grid {
-            grid-template-columns: 1fr 1fr;
+        .controls {
+            padding: 22px;
         }
 
-        .formula {
-            align-items: flex-start;
+        .controls h2 {
+            margin-bottom: 25px;
+            font-size: 18px;
+        }
 
-            flex-direction: column;
+        .control {
+            margin-bottom: 25px;
+        }
 
+        .control label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            color: #aeb6c5;
+            font-size: 13px;
+        }
+
+        .value {
+            color: #887cff;
+        }
+
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #30384b;
+            border-radius: 8px;
+            color: #fff;
+            background: #111622;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        select:focus {
+            outline: 2px solid #887cff;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            accent-color: #887cff;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        button {
+            flex: 1;
+            padding: 11px;
+            border: 1px solid #30384b;
+            border-radius: 8px;
+            color: white;
+            background: #111622;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #181e2c;
+        }
+
+        .start {
+            background: #7165e8;
+            border-color: #7165e8;
+        }
+
+        .calculations {
+            margin-top: 20px;
+            padding: 20px;
+        }
+
+        .calculations h2 {
+            margin-bottom: 18px;
+            font-size: 17px;
+        }
+
+        .calc-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
             gap: 12px;
         }
 
-        .formula-description {
-            text-align: left;
+        .calc {
+            padding: 15px;
+            border: 1px solid #202638;
+            border-radius: 10px;
+            background: #0e131e;
         }
-    }
 
-</style>
-```
+        .calc span {
+            display: block;
+            margin-bottom: 8px;
+            color: #7f8899;
+            font-size: 10px;
+        }
 
+        .calc strong {
+            font-size: 18px;
+        }
+
+        .unit {
+            color: #7f8899;
+            font-size: 10px;
+        }
+
+        .formula {
+            margin-top: 20px;
+            padding: 18px 20px;
+            border: 1px solid #292451;
+            border-radius: 12px;
+            background: #0d0d1b;
+        }
+
+        .formula span {
+            color: #887cff;
+            font-size: 10px;
+            letter-spacing: 2px;
+        }
+
+        .formula strong {
+            display: block;
+            margin-top: 7px;
+            font-size: 20px;
+        }
+
+        @media (max-width: 850px) {
+            .simulation {
+                grid-template-columns: 1fr;
+            }
+
+            .calc-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .calc-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 
 <body>
+    <a href="../laboratories.html" class="back">Laboratories</a>
 
-```
-<!-- NAVBAR -->
-
-<header class="navbar">
-
-    <a href="../index.html" class="logo">
-
-        <div class="logo-icon">
-            Φ
-        </div>
-
-        <div class="logo-text">
-            <strong>PHYSICS</strong>
-            <span>PLAYGROUND</span>
-        </div>
-
-    </a>
+    <main class="page">
+        <section class="heading">
+            <small id="planetTag">LAB 01 · EARTH</small>
+            <h1 id="planetTitle">Earth & Gravity</h1>
+            <p id="planetIntro">
+                Explore how Earth's gravity affects a falling object
+                and observe velocity, distance and force in real time.
+            </p>
+        </section>
 
 
-    <nav class="nav-links">
+        <section class="simulation">
 
-        <a href="../index.html">
-            Home
-        </a>
+            <div class="canvas-box">
 
-        <a href="../laboratories.html" class="active">
-            Labs
-        </a>
-
-        <a href="#">
-            About
-        </a>
-
-    </nav>
-
-
-    <a href="../laboratories.html" class="back-btn">
-        ← Back to Labs
-    </a>
-
-</header>
-
-
-<main class="page">
-
-
-    <!-- PAGE HEADER -->
-
-    <section class="page-header">
-
-        <div>
-
-            <span class="eyebrow">
-                LAB 01 · EARTH & SPACE
-            </span>
-
-            <h1>
-                Planets &
-                <span class="gradient-text">
-                    Gravity
-                </span>
-            </h1>
-
-        </div>
-
-
-        <p>
-            Explore how gravity changes across different planets
-            and observe how mass, distance and velocity affect
-            objects in space.
-        </p>
-
-    </section>
-
-
-    <!-- SIMULATION -->
-
-    <section class="simulation-layout">
-
-
-        <!-- CANVAS -->
-
-        <div class="simulation-container">
-
-            <div class="simulation-header">
-
-                <span class="simulation-title">
-                    LIVE SIMULATION
-                </span>
-
-                <span class="simulation-status">
-
-                    <span class="status-dot"></span>
-
-                    READY
-
-                </span>
-
-            </div>
-
-
-            <div class="canvas-wrapper">
-
-                <canvas id="planetCanvas">
-                </canvas>
-
-            </div>
-
-
-            <span class="simulation-hint">
-                Interactive simulation · Canvas
-            </span>
-
-        </div>
-
-
-        <!-- CONTROLS -->
-
-        <aside class="control-panel">
-
-            <div class="panel-title">
-
-                <h2>
-                    Experiment
-                </h2>
-
-                <span>
-                    PARAMETERS
-                </span>
-
-            </div>
-
-
-            <!-- Planet -->
-
-            <div class="control-group">
-
-                <div class="control-label">
-
-                    <label>
-                        Planet
-                    </label>
-
+                <div class="canvas-title">
+                    <span>LIVE SIMULATION</span>
                 </div>
 
-                <select id="planetSelect">
-
-                    <option value="earth">
-                        Earth
-                    </option>
-
-                    <option value="moon">
-                        Moon
-                    </option>
-
-                    <option value="mars">
-                        Mars
-                    </option>
-
-                    <option value="jupiter">
-                        Jupiter
-                    </option>
-
-                </select>
+                <div class="canvas-wrap">
+                    <canvas id="earthCanvas"></canvas>
+                </div>
 
             </div>
 
 
-            <!-- Object Mass -->
+            <div class="controls">
 
-            <div class="control-group">
+                <h2>Experiment</h2>
 
-                <div class="control-label">
+                <div class="control">
+                    <label for="planetSelect">
+                        Planet
+                        <span class="value" id="planetInfo">1.00× Earth</span>
+                    </label>
 
+                    <select id="planetSelect">
+                        <option value="moon">Moon</option>
+                        <option value="mercury">Mercury</option>
+                        <option value="venus">Venus</option>
+                        <option value="earth" selected>Earth</option>
+                        <option value="mars">Mars</option>
+                        <option value="jupiter">Jupiter</option>
+                        <option value="saturn">Saturn</option>
+                        <option value="uranus">Uranus</option>
+                        <option value="neptune">Neptune</option>
+                        <option value="pluto">Pluto</option>
+                    </select>
+                </div>
+
+                <div class="control">
                     <label>
                         Object Mass
+                        <span class="value">
+                            <span id="massValue">10</span> kg
+                        </span>
                     </label>
 
-                    <span class="control-value">
-                        <span id="massValue">
-                            10
-                        </span>
-                        kg
-                    </span>
-
+                    <input
+                        type="range"
+                        id="mass"
+                        min="1"
+                        max="100"
+                        value="10">
                 </div>
 
-                <input
-                    id="massSlider"
-                    type="range"
-                    min="1"
-                    max="100"
-                    value="10"
-                >
 
-            </div>
-
-
-            <!-- Height -->
-
-            <div class="control-group">
-
-                <div class="control-label">
-
+                <div class="control">
                     <label>
-                        Height
+                        Starting Height
+                        <span class="value">
+                            <span id="heightValue">100</span> m
+                        </span>
                     </label>
 
-                    <span class="control-value">
-                        <span id="heightValue">
-                            100
-                        </span>
-                        m
-                    </span>
-
+                    <input
+                        type="range"
+                        id="height"
+                        min="10"
+                        max="500"
+                        value="100">
                 </div>
 
-                <input
-                    id="heightSlider"
-                    type="range"
-                    min="10"
-                    max="500"
-                    value="100"
-                >
 
-            </div>
-
-
-            <!-- Initial Velocity -->
-
-            <div class="control-group">
-
-                <div class="control-label">
-
+                <div class="control">
                     <label>
                         Initial Velocity
+                        <span class="value">
+                            <span id="velocityValue">0</span> m/s
+                        </span>
                     </label>
 
-                    <span class="control-value">
-                        <span id="velocityValue">
-                            0
-                        </span>
-                        m/s
-                    </span>
-
+                    <input
+                        type="range"
+                        id="velocity"
+                        min="0"
+                        max="100"
+                        value="0">
                 </div>
 
-                <input
-                    id="velocitySlider"
-                    type="range"
-                    min="0"
-                    max="100"
-                    value="0"
-                >
+
+                <div class="buttons">
+                    <button id="startBtn" class="start">
+                        ▶ Start
+                    </button>
+
+                    <button id="resetBtn">
+                        ↻ Reset
+                    </button>
+                </div>
 
             </div>
 
-
-            <!-- Buttons -->
-
-            <div class="control-buttons">
-
-                <button
-                    class="control-btn primary"
-                    id="startButton"
-                    type="button"
-                >
-                    ▶ Start
-                </button>
-
-                <button
-                    class="control-btn"
-                    id="resetButton"
-                    type="button"
-                >
-                    ↻ Reset
-                </button>
-
-            </div>
-
-        </aside>
-
-    </section>
+        </section>
 
 
-    <!-- LIVE CALCULATIONS -->
+        <section class="calculations">
 
-    <section class="calculations">
+            <h2>Live Calculations</h2>
 
-        <div class="calculations-header">
+            <div class="calc-grid">
 
-            <h2>
-                Live Calculations
-            </h2>
+                <div class="calc">
+                    <span>GRAVITY</span>
+                    <strong id="gravity">9.81</strong>
+                    <small class="unit">m/s²</small>
+                </div>
 
-            <span>
-                REAL-TIME
-            </span>
+                <div class="calc">
+                    <span>VELOCITY</span>
+                    <strong id="currentVelocity">0</strong>
+                    <small class="unit">m/s</small>
+                </div>
 
-        </div>
+                <div class="calc">
+                    <span>HEIGHT</span>
+                    <strong id="currentHeight">100</strong>
+                    <small class="unit">m</small>
+                </div>
 
+                <div class="calc">
+                    <span>FORCE</span>
+                    <strong id="force">98.1</strong>
+                    <small class="unit">N</small>
+                </div>
 
-        <div class="calculation-grid">
+                <div class="calc">
+                    <span>TIME ELAPSED</span>
+                    <strong id="timeElapsed">0.00</strong>
+                    <small class="unit">s</small>
+                </div>
 
+                <div class="calc">
+                    <span>FALL TIME</span>
+                    <strong id="fallTime">0.00</strong>
+                    <small class="unit">s</small>
+                </div>
 
-            <div class="calculation">
+                <div class="calc">
+                    <span>IMPACT SPEED</span>
+                    <strong id="impactSpeed">0.00</strong>
+                    <small class="unit">m/s</small>
+                </div>
 
-                <span>
-                    GRAVITY
-                </span>
-
-                <strong id="gravityValue">
-                    9.81
-                </strong>
-
-                <small class="unit">
-                    m/s²
-                </small>
+                <div class="calc">
+                    <span>DISTANCE FALLEN</span>
+                    <strong id="distanceFallen">0.00</strong>
+                    <small class="unit">m</small>
+                </div>
 
             </div>
 
-
-            <div class="calculation">
-
-                <span>
-                    WEIGHT
-                </span>
-
-                <strong id="weightValue">
-                    98.10
-                </strong>
-
-                <small class="unit">
-                    N
-                </small>
-
-            </div>
+        </section>
 
 
-            <div class="calculation">
+        <section class="formula">
+            <span>GRAVITATIONAL FORCE</span>
+            <strong>F = mg</strong>
+        </section>
 
-                <span>
-                    VELOCITY
-                </span>
-
-                <strong id="liveVelocity">
-                    0.00
-                </strong>
-
-                <small class="unit">
-                    m/s
-                </small>
-
-            </div>
+    </main>
 
 
-            <div class="calculation">
+    <script src="../js/planets.js"></script>
 
-                <span>
-                    DISTANCE
-                </span>
-
-                <strong id="distanceValue">
-                    100
-                </strong>
-
-                <small class="unit">
-                    m
-                </small>
-
-            </div>
-
-
-        </div>
-
-    </section>
-
-
-    <!-- FORMULA -->
-
-    <section class="formula">
-
-        <div class="formula-info">
-
-            <span>
-                GRAVITATIONAL FORCE
-            </span>
-
-            <strong>
-                F = mg
-            </strong>
-
-        </div>
-
-        <p class="formula-description">
-
-            The weight of an object depends on its mass
-            and the gravitational acceleration of the planet.
-
-        </p>
-
-    </section>
-
-
-</main>
-
-
-<script src="../js/planets.js"></script>
 </body>
-
 </html>
 

@@ -1,0 +1,39 @@
+/* ===== Navbar user greeting ===== */
+#userInfo {
+  display: none;            /* navbar.js switches this to flex when logged in */
+  align-items: center;
+  gap: 18px;
+}
+
+.user-greeting {
+  color: #b9aed6;           /* same as Discover, Labs, Simulate... */
+  font-size: 16px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: color 0.2s;
+}
+.user-greeting:hover {
+  color: #E9D5FF;           /* same hover colour as nav links */
+}
+
+.user-name {
+  color: inherit;           /* no gradient, same colour as the rest of the text */
+  font-weight: inherit;
+}
+
+.wave {
+  display: inline-block;
+  transform-origin: 70% 70%;
+  animation: wave-hand 2.4s ease-in-out infinite;
+}
+
+@keyframes wave-hand {
+  0%, 60%, 100% { transform: rotate(0deg); }
+  10%, 30%      { transform: rotate(16deg); }
+  20%, 40%      { transform: rotate(-10deg); }
+  50%           { transform: rotate(8deg); }
+}
+
+@media (max-width: 720px) {
+  .user-greeting { font-size: 14px; }
+}
