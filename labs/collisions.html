@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Momentum | Physics Playground</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{min-height:100vh;font-family:Arial,sans-serif;color:#fff;background:radial-gradient(800px 460px at 0% 0%,#1a1740 0%,transparent 60%),radial-gradient(800px 460px at 100% 0%,#0d2a3a 0%,transparent 55%),#05070d}
+a{color:inherit;text-decoration:none}
+.back{position:absolute;top:25px;right:4%;padding:10px 18px;border-radius:8px;font-size:14px;font-weight:700;color:#05070d;background:#fff;transition:.3s}
+.back:hover{background:#e5e5e5}
+.page{width:92%;max-width:1200px;margin:auto;padding-bottom:40px}
+.heading{margin:35px 0 30px}
+.heading small{color:#887cff;letter-spacing:3px}
+.heading h1{margin:12px 0;font-size:clamp(38px,6vw,65px)}
+.heading p{max-width:600px;color:#8d96a8;line-height:1.7}
+.simulation{display:grid;grid-template-columns:1fr 310px;gap:20px}
+.canvas-box,.controls,.calculations{border:1px solid #202638;border-radius:18px;background:#0a0e17}
+.canvas-box{padding:20px}
+.canvas-title{display:flex;justify-content:space-between;color:#8992a3;font-size:11px;letter-spacing:2px}
+.status{color:#62e6a4}
+.canvas-wrap{margin-top:15px;border:1px solid #202638;border-radius:10px;overflow:hidden;background:radial-gradient(ellipse at center,#16233f 0%,#080c18 60%,#04060b 100%)}
+canvas{width:100%;height:470px;display:block;touch-action:none}
+.controls{padding:22px}
+.controls h2{margin-bottom:22px;font-size:18px}
+.control{margin-bottom:20px}
+.control label{display:flex;justify-content:space-between;margin-bottom:9px;color:#aeb6c5;font-size:13px}
+.value{color:#887cff}
+input[type=range]{width:100%;accent-color:#887cff}
+.buttons{display:flex;gap:10px;margin-top:26px}
+button{flex:1;padding:11px;border:1px solid #30384b;border-radius:8px;color:#fff;background:#111622;cursor:pointer}
+button:hover{background:#181e2c}
+.start{background:#7165e8;border-color:#7165e8}
+.calculations{margin-top:20px;padding:20px}
+.calculations h2{margin-bottom:18px;font-size:17px}
+.calc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.calc{padding:15px;border:1px solid #202638;border-radius:10px;background:#0e131e}
+.calc span{display:block;margin-bottom:8px;color:#7f8899;font-size:10px}
+.calc strong{font-size:18px}
+.unit{color:#7f8899;font-size:10px}
+.formula-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px}
+.formula{padding:16px 18px;border:1px solid #292451;border-radius:12px;background:#0d0d1b}
+.formula span{color:#887cff;font-size:10px;letter-spacing:2px}
+.formula strong{display:block;margin-top:7px;font-size:18px}
+.formula small{display:block;margin-top:6px;color:#7f8899;font-size:12px;line-height:1.5}
+@media(max-width:850px){.simulation{grid-template-columns:1fr}.calc-grid{grid-template-columns:1fr 1fr}.formula-row{grid-template-columns:1fr}}
+@media(max-width:500px){.calc-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<a href="../laboratories.html" class="back">Laboratories</a>
+<main class="page">
+
+<section class="heading">
+  <small>LAB 04 · MOMENTUM</small>
+  <h1>Elastic Collisions</h1>
+  <p>Observe linear momentum preservation, kinetic energy redistribution, and the effect of the coefficient of restitution during a collision.</p>
+</section>
+
+<section class="simulation">
+  <div class="canvas-box">
+    <div class="canvas-title"><span>LIVE SIMULATION · DRAG A BALL OR ITS ARROW</span><span class="status" id="status">● READY</span></div>
+    <div class="canvas-wrap"><canvas id="collisionCanvas"></canvas></div>
+  </div>
+
+  <div class="controls">
+    <h2>Experiment</h2>
+    <div class="control"><label for="mass1">Mass 1 <span class="value"><span id="mass1Value">10</span> kg</span></label>
+      <input type="range" id="mass1" min="1" max="50" value="10"></div>
+    <div class="control"><label for="mass2">Mass 2 <span class="value"><span id="mass2Value">10</span> kg</span></label>
+      <input type="range" id="mass2" min="1" max="50" value="10"></div>
+    <div class="control"><label for="velocity1">Velocity 1 <span class="value"><span id="velocity1Value">40</span> m/s</span></label>
+      <input type="range" id="velocity1" min="-100" max="100" value="40"></div>
+    <div class="control"><label for="velocity2">Velocity 2 <span class="value"><span id="velocity2Value">-20</span> m/s</span></label>
+      <input type="range" id="velocity2" min="-100" max="100" value="-20"></div>
+    <div class="control"><label for="restitution">Restitution (e) <span class="value"><span id="restitutionValue">1.0</span></span></label>
+      <input type="range" id="restitution" min="0" max="1" step="0.1" value="1"></div>
+    <div class="buttons">
+      <button id="startBtn" class="start">▶ Start</button>
+      <button id="resetBtn">↻ Reset</button>
+    </div>
+  </div>
+</section>
+
+<section class="calculations">
+  <h2>Live Calculations</h2>
+  <div class="calc-grid">
+    <div class="calc"><span>TOTAL MOMENTUM</span><strong id="totalMomentum">200</strong> <small class="unit">kg·m/s</small></div>
+    <div class="calc"><span>KINETIC ENERGY</span><strong id="kineticEnergy">10000</strong> <small class="unit">J</small></div>
+    <div class="calc"><span>IMPULSE</span><strong id="impulse">0</strong> <small class="unit">N·s</small></div>
+    <div class="calc"><span>Δ MOMENTUM</span><strong id="deltaMomentum">0.00</strong> <small class="unit">kg·m/s</small></div>
+    <div class="calc"><span>VELOCITY 1'</span><strong id="finalVelocity1">0.00</strong> <small class="unit">m/s</small></div>
+    <div class="calc"><span>VELOCITY 2'</span><strong id="finalVelocity2">0.00</strong> <small class="unit">m/s</small></div>
+    <div class="calc"><span>ENERGY CHANGE</span><strong id="energyChange">0</strong> <small class="unit">J</small></div>
+    <div class="calc"><span>RESTITUTION</span><strong id="currentRestitution">1.0</strong> <small class="unit">e</small></div>
+  </div>
+</section>
+
+<section class="formula-row">
+  <div class="formula"><span>MOMENTUM</span><strong>p = m · v</strong><small>Heavier or faster objects carry more momentum.</small></div>
+  <div class="formula"><span>CONSERVATION</span><strong>m₁v₁ + m₂v₂ = m₁v₁' + m₂v₂'</strong><small>Total momentum is the same before and after.</small></div>
+  <div class="formula"><span>RESTITUTION</span><strong>e = (v₂' − v₁') / (v₁ − v₂)</strong><small>e = 1 keeps all kinetic energy. e = 0 is a perfectly sticky collision.</small></div>
+</section>
+
+</main>
+<script src="../js/collisions.js"></script>
+</body>
+</html>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Magnetism | Physics Playground</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{min-height:100vh;font-family:Arial,sans-serif;color:#fff;background:radial-gradient(800px 460px at 90% -10%,#2a1230 0%,transparent 60%),radial-gradient(800px 460px at 0% 0%,#14173f 0%,transparent 60%),#05070d}
+a{color:inherit;text-decoration:none}
+.back{position:absolute;top:25px;right:4%;padding:10px 18px;border-radius:8px;font-size:14px;font-weight:700;color:#05070d;background:#fff;transition:.3s}
+.back:hover{background:#e5e5e5}
+.page{width:92%;max-width:1200px;margin:auto;padding-bottom:40px}
+.heading{margin:35px 0 30px}
+.heading small{color:#887cff;letter-spacing:3px}
+.heading h1{margin:12px 0;font-size:clamp(38px,6vw,65px)}
+.heading p{max-width:550px;color:#8d96a8;line-height:1.7}
+.simulation{display:grid;grid-template-columns:1fr 310px;gap:20px}
+.canvas-box,.controls,.calculations{border:1px solid #202638;border-radius:18px;background:#0a0e17}
+.canvas-box{padding:20px}
+.canvas-title{display:flex;justify-content:space-between;gap:10px;color:#8992a3;font-size:11px;letter-spacing:2px}
+.status{color:#62e6a4;white-space:nowrap}
+.canvas-wrap{margin-top:15px;border:1px solid #202638;border-radius:10px;overflow:hidden;background:radial-gradient(circle,#172342 0%,#080c18 55%,#04060b 100%)}
+canvas{width:100%;height:470px;display:block;touch-action:none}
+.controls{padding:22px}
+.controls h2{margin-bottom:25px;font-size:18px}
+.control{margin-bottom:25px}
+.control label{display:flex;justify-content:space-between;margin-bottom:10px;color:#aeb6c5;font-size:13px}
+.value{color:#887cff}
+input[type=range]{width:100%;accent-color:#887cff}
+.buttons{display:flex;gap:10px;margin-top:30px}
+button{flex:1;padding:11px;border:1px solid #30384b;border-radius:8px;color:#fff;background:#111622;cursor:pointer}
+button:hover{background:#181e2c}
+.start{background:#7165e8;border-color:#7165e8}
+.flip{width:100%;margin-top:10px}
+.calculations{margin-top:20px;padding:20px}
+.calculations h2{margin-bottom:18px;font-size:17px}
+.calc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.calc{padding:15px;border:1px solid #202638;border-radius:10px;background:#0e131e}
+.calc span{display:block;margin-bottom:8px;color:#7f8899;font-size:10px}
+.calc strong{font-size:18px}
+.unit{color:#7f8899;font-size:10px}
+.formula{margin-top:20px;padding:18px 20px;border:1px solid #292451;border-radius:12px;background:#0d0d1b}
+.formula span{color:#887cff;font-size:10px;letter-spacing:2px}
+.formula strong{display:block;margin-top:7px;font-size:20px}
+.formula p{margin-top:6px;color:#7f8899;font-size:13px;line-height:1.6}
+@media(max-width:850px){.simulation{grid-template-columns:1fr}.calc-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:500px){.calc-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<a href="../laboratories.html" class="back">Laboratories</a>
+<main class="page">
+
+<section class="heading">
+  <small>LAB 05 · MAGNETISM</small>
+  <h1>Magnetic Field</h1>
+  <p>Explore the invisible magnetic field around a bar magnet and observe how its strength changes with distance.</p>
+</section>
+
+<section class="simulation">
+  <div class="canvas-box">
+    <div class="canvas-title"><span>LIVE SIMULATION · DRAG THE MAGNET OR COMPASS</span></div>
+    <div class="canvas-wrap"><canvas id="magnetCanvas"></canvas></div>
+  </div>
+
+  <div class="controls">
+    <h2>Experiment</h2>
+    <div class="control">
+      <label for="strength">Magnet Strength <span class="value"><span id="strengthValue">50</span> %</span></label>
+      <input type="range" id="strength" min="10" max="100" value="50">
+    </div>
+    <div class="control">
+      <label for="position">Magnet Position <span class="value"><span id="positionValue">50</span> %</span></label>
+      <input type="range" id="position" min="20" max="80" value="50">
+    </div>
+    <div class="control">
+      <label for="distance">Compass Distance <span class="value"><span id="distanceValue">150</span> px</span></label>
+      <input type="range" id="distance" min="80" max="250" value="150">
+    </div>
+    <div class="buttons">
+      <button id="startBtn" class="start">⏸ Pause flow</button>
+      <button id="resetBtn">↻ Reset</button>
+    </div>
+    <button id="flipBtn" class="flip">⇄ Flip poles</button>
+  </div>
+</section>
+
+<section class="calculations">
+  <h2>Live Calculations</h2>
+  <div class="calc-grid">
+    <div class="calc"><span>FIELD AT COMPASS</span><strong id="fieldStrength">50</strong> <small class="unit">units</small></div>
+    <div class="calc"><span>DISTANCE</span><strong id="currentDistance">150</strong> <small class="unit">px</small></div>
+    <div class="calc"><span>MAGNET POSITION</span><strong id="currentPosition">50</strong> <small class="unit">%</small></div>
+    <div class="calc"><span>FIELD EFFECT</span><strong id="fieldEffect">Strong</strong> <small class="unit">relative</small></div>
+  </div>
+</section>
+
+<section class="formula">
+  <span>MAGNETIC FIELD</span>
+  <strong>B ∝ 1 / r³</strong>
+  <p>Far from a bar magnet, the field falls with the cube of distance. Double the distance and the field drops to one eighth.</p>
+</section>
+
+</main>
+<script src="../js/magnetism.js"></script>
+</body>
+</html>
