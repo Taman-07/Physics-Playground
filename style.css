@@ -327,8 +327,8 @@
        PURE HTML & CSS 3D QUANTUM-COSMIC SINGULARITY MODEL (IN MOTION & MOVABLE)
        ========================================================================== */
     .hero-visual {
-      min-height: 520px;
-      height: 540px;
+      min-height: 600px;
+      height: 600px;
       position: relative;
       display: flex;
       align-items: center;
@@ -340,9 +340,9 @@
     .model-3d-stage {
       position: relative;
       width: 100%;
-      max-width: 560px;
+      max-width: 600px;
       height: 520px;
-      perspective: 1200px;
+      perspective: 1400px;
       display: flex;
       align-items: center;
       justify-content: center;
