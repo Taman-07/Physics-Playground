@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mechanics | Physics Playground</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{min-height:100vh;font-family:Arial,sans-serif;color:#fff;background:#05070d}
+a{color:inherit;text-decoration:none}
+.back{position:absolute;top:25px;right:4%;padding:10px 18px;border-radius:8px;font-size:14px;font-weight:700;color:#05070d;background:#fff;transition:.3s}
+.back:hover{background:#e5e5e5}
+.page{width:92%;max-width:1200px;margin:auto;padding-bottom:40px}
+.heading{margin:35px 0 30px}
+.heading small{color:#887cff;letter-spacing:3px}
+.heading h1{margin:12px 0;font-size:clamp(38px,6vw,65px)}
+.heading p{max-width:550px;color:#8d96a8;line-height:1.7}
+.simulation{display:grid;grid-template-columns:1fr 320px;gap:20px}
+.canvas-box,.controls,.calculations,.graph-box{border:1px solid #202638;border-radius:18px;background:#0a0e17}
+.canvas-box{padding:20px}
+.canvas-title{display:flex;justify-content:space-between;color:#8992a3;font-size:11px;letter-spacing:2px}
+.status{color:#62e6a4}.status.run{color:#ffd166}.status.stop{color:#ff8e9e}
+.canvas-wrap{margin-top:15px;border:1px solid #202638;border-radius:10px;overflow:hidden;background:radial-gradient(ellipse at 50% 110%,#12244a 0%,#080c18 55%,#04060b 100%)}
+canvas{width:100%;display:block}
+#mechanicsCanvas{height:400px}
+.graph-title{margin:16px 0 8px;color:#8992a3;font-size:11px;letter-spacing:2px;display:flex;justify-content:space-between}
+#graphCanvas{height:130px;border:1px solid #202638;border-radius:10px;background:#080c14}
+.controls{padding:22px}
+.controls h2{margin-bottom:20px;font-size:18px}
+.control{margin-bottom:18px}
+.control label{display:flex;justify-content:space-between;margin-bottom:8px;color:#aeb6c5;font-size:13px}
+.value{color:#887cff}
+input[type=range]{width:100%;accent-color:#887cff}
+select{width:100%;padding:9px;border:1px solid #30384b;border-radius:8px;color:#fff;background:#111622}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.chip{flex:none;padding:6px 10px;font-size:12px;border-radius:20px}
+.chip.on{background:#2a2560;border-color:#887cff}
+.buttons{display:flex;gap:10px;margin-top:22px}
+button{flex:1;padding:11px;border:1px solid #30384b;border-radius:8px;color:#fff;background:#111622;cursor:pointer}
+button:hover{background:#181e2c}
+.start{background:#7165e8;border-color:#7165e8}
+.start:hover{background:#8277f0}
+.push{margin-top:10px;width:100%}
+.push.on{background:#16382b;border-color:#62e6a4}
+.calculations{margin-top:20px;padding:20px}
+.calculations h2{margin-bottom:18px;font-size:17px}
+.calc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.calc{padding:15px;border:1px solid #202638;border-radius:10px;background:#0e131e}
+.calc span{display:block;margin-bottom:8px;color:#7f8899;font-size:10px}
+.calc strong{font-size:18px}
+.unit{color:#7f8899;font-size:10px;margin-left:3px}
+.formula-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px}
+.formula{padding:16px 18px;border:1px solid #292451;border-radius:12px;background:#0d0d1b}
+.formula span{color:#887cff;font-size:10px;letter-spacing:2px}
+.formula strong{display:block;margin-top:7px;font-size:18px}
+.formula small{display:block;margin-top:6px;color:#7f8899;font-size:12px}
+.note{margin-top:14px;padding:12px 16px;border-radius:10px;background:#0d111c;color:#8d96a8;font-size:13px;line-height:1.6;min-height:44px}
+@media(max-width:850px){.simulation{grid-template-columns:1fr}.calc-grid{grid-template-columns:1fr 1fr}.formula-row{grid-template-columns:1fr}}
+@media(max-width:500px){.calc-grid{grid-template-columns:1fr}}
+
+</style>
+</head>
+<body>
+<a href="../laboratories.html" class="back">Laboratories</a>
+<main class="page">
+
+<section class="heading">
+  <small>LAB 02 · MECHANICS</small>
+  <h1>Motion &amp; Forces</h1>
+  <p>Push a block across ice, wood, concrete and rubber, and watch how each surface changes the motion. Watch force, friction, acceleration, velocity and energy change in real time.</p>
+</section>
+
+<section class="simulation">
+  <div class="canvas-box">
+    <div class="canvas-title"><span>LIVE SIMULATION</span></div>
+    <div class="canvas-wrap"><canvas id="mechanicsCanvas"></canvas></div>
+    <div class="graph-title"><span>VELOCITY vs TIME</span><span id="graphMax">0 m/s</span></div>
+    <canvas id="graphCanvas"></canvas>
+    <div class="note" id="note"></div>
+  </div>
+
+  <div class="controls">
+    <h2>Experiment</h2>
+
+    <div class="control">
+      <label>Surface</label>
+      <div class="chips" id="surfaceChips">
+        <button class="chip" data-mu="0.03" data-s="ice">Ice</button>
+        <button class="chip on" data-mu="0.20" data-s="wood">Wood</button>
+        <button class="chip" data-mu="0.50" data-s="concrete">Concrete</button>
+        <button class="chip" data-mu="0.85" data-s="rubber">Rubber</button>
+      </div>
+    </div>
+
+    <div class="control">
+      <label>Object Mass <span class="value"><span id="massValue">10</span> kg</span></label>
+      <input type="range" id="mass" min="1" max="100" value="10">
+    </div>
+    <div class="control">
+      <label>Applied Force <span class="value"><span id="forceValue">100</span> N</span></label>
+      <input type="range" id="appliedForce" min="0" max="500" value="100">
+    </div>
+    <div class="control">
+      <label>Friction Coefficient (μ) <span class="value"><span id="frictionValue">0.20</span></span></label>
+      <input type="range" id="friction" min="0" max="100" value="20">
+    </div>
+    <div class="control">
+      <label>Initial Velocity <span class="value"><span id="velocityValue">0</span> m/s</span></label>
+      <input type="range" id="velocity" min="0" max="50" value="0">
+    </div>
+
+    <div class="buttons">
+      <button id="startBtn" class="start">▶ Start</button>
+      <button id="resetBtn">↻ Reset</button>
+    </div>
+    <button id="pushBtn" class="push on">Force: ON (tap to release)</button>
+  </div>
+</section>
+
+<section class="calculations">
+  <h2>Live Calculations</h2>
+  <div class="calc-grid">
+    <div class="calc"><span>NET FORCE</span><strong id="netForce">80</strong><small class="unit">N</small></div>
+    <div class="calc"><span>ACCELERATION</span><strong id="acceleration">8.00</strong><small class="unit">m/s²</small></div>
+    <div class="calc"><span>VELOCITY</span><strong id="currentVelocity">0.00</strong><small class="unit">m/s</small></div>
+    <div class="calc"><span>DISTANCE</span><strong id="distance">0.00</strong><small class="unit">m</small></div>
+    <div class="calc"><span>WEIGHT (W = mg)</span><strong id="weight">98.1</strong><small class="unit">N</small></div>
+    <div class="calc"><span>FRICTION FORCE</span><strong id="frictionForce">19.6</strong><small class="unit">N</small></div>
+    <div class="calc"><span>KINETIC ENERGY</span><strong id="ke">0.00</strong><small class="unit">J</small></div>
+    <div class="calc"><span>TIME</span><strong id="time">0.00</strong><small class="unit">s</small></div>
+  </div>
+</section>
+
+<section class="formula-row">
+  <div class="formula"><span>NEWTON'S SECOND LAW</span><strong>F = ma</strong><small>Net force sets the acceleration.</small></div>
+  <div class="formula"><span>FRICTION</span><strong>f = μmg</strong><small>Heavier objects and rougher surfaces resist more.</small></div>
+  <div class="formula"><span>KINETIC ENERGY</span><strong>KE = ½mv²</strong><small>Energy grows with the square of speed.</small></div>
+</section>
+
+</main>
+<script src="../js/mechanics.js"></script>
+</body>
+</html>
